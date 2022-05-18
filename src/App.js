@@ -1,7 +1,25 @@
+import React, { useContext } from 'react';
+
 import logo from './logo.svg';
 import './App.css';
 
+import { TodoContext } from './context/TodoContext';
+import { TodoList } from './todoList'
+
 function App() {
+
+  const { connectWallet, updateTodoStatus, currentAccount, todoData, createTodo } = useContext(TodoContext);
+
+
+  const handleChange = () => {
+    const title = document.querySelector("#title").value;
+
+    if(!title)
+      return
+
+    createTodo(title)
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -17,7 +35,25 @@ function App() {
         >
           Learn React
         </a>
+       
       </header>
+      {!currentAccount && 
+        <div>
+         <button onClick={connectWallet}>Connect</button>
+        </div>
+      }
+      {
+        currentAccount && 
+        <p>connected to {currentAccount} </p>
+      }
+      <div>
+        <input type="text" name="title" id="title"/>
+        <button onClick={handleChange}>Add to List</button>
+        {
+          todoData.length > 0 && 
+          <TodoList todolists={todoData} updatestatus={updateTodoStatus}></TodoList>
+        }
+      </div>
     </div>
   );
 }
